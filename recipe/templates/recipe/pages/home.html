@@ -1,20 +1,17 @@
 {% extends "global/base.html" %}
 
+{% block title %}Home |{% endblock title %}
+
 {% block content %}
 
     <div class="main-content main-content-list container">
+        
+        {% for recipe in  recipes %}
+            
+            {% include "recipe/partials/recipe.html" %}
 
-        {% include "recipe/partials/recipe.html" %}
-        {% include "recipe/partials/recipe.html" %}
-        {% include "recipe/partials/recipe.html" %}
-        {% include "recipe/partials/recipe.html" %}
-        {% include "recipe/partials/recipe.html" %}
-        {% include "recipe/partials/recipe.html" %}
-        {% include "recipe/partials/recipe.html" %}
-        {% include "recipe/partials/recipe.html" %}
-        {% include "recipe/partials/recipe.html" %}
-        {% include "recipe/partials/recipe.html" %}
-
+        {% endfor %}
+        
     </div>
     
 {% endblock content %}
