@@ -2,8 +2,26 @@ from cProfile import label
 from dataclasses import fields
 from django import forms
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+
+
+def addAttr(field, attrName, attrNewValue):
+    existing = field.field.widget.attrs.get(attrName, '')
+    field.field.widget.attrs[attrName] = f'{existing} {attrNewValue}'.strip()
+
+
+def addPlaceholder(field, placeholderVal):
+    addAttr(field, 'placeholder', placeholderVal)
+
 
 class RegisterForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        addPlaceholder(self['first_name'], 'Ex. João')
+        addPlaceholder(self['last_name'], 'Ex. Silva')
+        addPlaceholder(self['username'], 'Ex. joaosilva')
+        addPlaceholder(self['email'], 'Ex. Digite seu Email')
 
     password2 = forms.CharField(
         required=True,
@@ -42,6 +60,19 @@ class RegisterForm(forms.ModelForm):
                 'placeholder':'Digite sua senha'
             }),
         }
+
+
+    #validar campos senha e confirmar senha
+        
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        password2 = cleaned_data.get('password2')
+
+        if password != password2:
+            raise ValidationError({
+                'password':'As Senhas não conferem',
+                'password2': 'As Senhas não conferem',}, code='invalid',)
 
         
 
